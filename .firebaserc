@@ -1,0 +1,9 @@
+{
+  "projects": {
+    "tatlitelas": "tatlitelas-co",
+    "default": "tatlitelas-co"
+  },
+  "targets": {},
+  "etags": {},
+  "dataconnectEmulatorConfig": {}
+}

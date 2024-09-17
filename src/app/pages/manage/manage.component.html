@@ -1,0 +1,188 @@
+<div class="min-h-screen bg-gradient-to-r from-blue-100 to-pink-100 p-4 md:p-6 flex items-center justify-center">
+    <div class="w-full max-w-7xl bg-white rounded-xl shadow-md overflow-hidden">
+        <div class="flex flex-col md:flex-row">
+            <!-- Sidebar -->
+            <div class="w-full md:w-1/3 bg-gray-50 p-4 md:p-6 border-b md:border-r border-gray-200">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl md:text-2xl font-semibold text-gray-800">Etkinlikleriniz</h2>
+                    <button class="bg-blue-500 text-white p-2 rounded-full hover:bg-blue-600 transition duration-300"
+                        (click)="createNewEvent()">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="md:hidden">
+                    <button
+                        class="w-full bg-gray-200 text-gray-700 py-2 px-4 rounded-lg mb-4 hover:bg-gray-300 transition duration-300"
+                        (click)="toggleEventList()">
+                        {{ userEvents.length > 1 ? 'Etkinliklerinizi görmek için tıklayın!' : 'Etkinliğinizi görmek için
+                        tıklayın!' }}
+                    </button>
+                </div>
+                <div [ngClass]="{'hidden md:block': !showEventList}"
+                    class="overflow-y-auto max-h-[300px] md:max-h-screen">
+                    <div *ngFor="let event of userEvents; let last = last" class="mb-2">
+                        <div class="bg-transparent hover:bg-white/50 p-2 rounded-lg transition duration-300 ease-in-out cursor-pointer flex justify-between items-center"
+                            (click)="editEvent(event)">
+                            <span class="text-sm text-gray-700">{{ event.name }}</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500 cursor-pointer"
+                                viewBox="0 0 20 20" fill="currentColor" (click)="deleteEvent(event)">
+                                <path fill-rule="evenodd"
+                                    d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                                    clip-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                        <div *ngIf="!last" class="border-b border-gray-200 my-1"></div>
+                    </div>
+                    <p *ngIf="userEvents.length === 0" class="text-gray-500 text-center mt-4">Henüz etkinlik
+                        bulunmamaktadır.</p>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="w-full md:w-2/3 p-4 md:p-6">
+                <!-- Progress Steps -->
+                <div class="mb-8">
+                    <div class="flex justify-between">
+                        <div *ngFor="let step of ['Temel Bilgiler', 'Etkinlik Detayları', 'Gizlilik Ayarları', 'Erişim']; let i = index"
+                            class="flex flex-col items-center cursor-pointer" (click)="setStep(i)">
+                            <div class="w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center mb-2 transition duration-300"
+                                [ngClass]="{'bg-blue-500 text-white': currentStep === i, 'bg-gray-200 text-gray-600': currentStep !== i}">
+                                {{ i + 1 }}
+                            </div>
+                            <span class="text-xs md:text-sm text-center"
+                                [ngClass]="{'text-blue-500 font-semibold': currentStep === i, 'text-gray-500': currentStep !== i}">
+                                {{ step }}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="w-full bg-gray-200 h-1 mt-4">
+                        <div class="bg-blue-500 h-1 transition-all duration-300"
+                            [style.width]="((currentStep + 1) / 4 * 100) + '%'"></div>
+                    </div>
+                </div>
+
+                <!-- Step Content -->
+                <div class="min-h-[400px]">
+                    <!-- Step 1: Basic Information -->
+                    <div *ngIf="currentStep === 0">
+                        <div class="mb-4">
+                            <label for="eventType" class="block text-sm font-medium text-gray-700 mb-1">Etkinlik Türü
+                                Seçiniz * <span class="text-red-500 text-xs italic"
+                                    *ngIf="showValidationErrors && !currentEvent.eventType">Zorunlu alan.</span></label>
+                            <select id="eventType" [(ngModel)]="currentEvent.eventType" (change)="onEventTypeChange()"
+                                class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+                                [ngClass]="{'border-red-500': showValidationErrors && !currentEvent.eventType}"
+                                required>
+                                <option *ngFor="let type of eventTypes" [value]="type">{{ type }}</option>
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <label for="eventName" class="block text-sm font-medium text-gray-700 mb-1">Etkinlik Adı *
+                                <span class="text-red-500 text-xs italic"
+                                    *ngIf="showValidationErrors && !currentEvent.name">Zorunlu alan.</span></label>
+                            <input type="text" id="eventName" [(ngModel)]="currentEvent.name"
+                                class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                [ngClass]="{'border-red-500': showValidationErrors && !currentEvent.name}" required>
+                        </div>
+                        <div *ngIf="showBrideGroomNames" class="mb-4">
+                            <label for="brideName" class="block text-sm font-medium text-gray-700 mb-1">Gelin Adı *
+                                <span class="text-red-500 text-xs italic"
+                                    *ngIf="showValidationErrors && !currentEvent.brideName">Zorunlu alan.</span></label>
+                            <input type="text" id="brideName" [(ngModel)]="currentEvent.brideName"
+                                class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                [ngClass]="{'border-red-500': showValidationErrors && !currentEvent.brideName}"
+                                required>
+                        </div>
+                        <div *ngIf="showBrideGroomNames" class="mb-4">
+                            <label for="groomName" class="block text-sm font-medium text-gray-700 mb-1">Damat Adı *
+                                <span class="text-red-500 text-xs italic"
+                                    *ngIf="showValidationErrors && !currentEvent.groomName">Zorunlu alan.</span></label>
+                            <input type="text" id="groomName" [(ngModel)]="currentEvent.groomName"
+                                class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                [ngClass]="{'border-red-500': showValidationErrors && !currentEvent.groomName}"
+                                required>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Event Details -->
+                    <div *ngIf="currentStep === 1">
+                        <div class="mb-4">
+                            <label for="startDateTime" class="block text-sm font-medium text-gray-700 mb-1">Başlangıç
+                                Tarihi ve Saati * <span class="text-red-500 text-xs italic"
+                                    *ngIf="showValidationErrors && !currentEvent.startDateTime">Zorunlu
+                                    alan.</span></label>
+                            <input type="datetime-local" id="startDateTime" [(ngModel)]="currentEvent.startDateTime"
+                                class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                [ngClass]="{'border-red-500': showValidationErrors && !currentEvent.startDateTime}"
+                                required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="endDateTime" class="block text-sm font-medium text-gray-700 mb-1">Bitiş Tarihi
+                                ve Saati * <span class="text-red-500 text-xs italic"
+                                    *ngIf="showValidationErrors && !currentEvent.endDateTime">Zorunlu
+                                    alan.</span></label>
+                            <input type="datetime-local" id="endDateTime" [(ngModel)]="currentEvent.endDateTime"
+                                class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                [ngClass]="{'border-red-500': showValidationErrors && !currentEvent.endDateTime}"
+                                required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="description"
+                                class="block text-sm font-medium text-gray-700 mb-1">Misafirlerinize bir not
+                                bırakın!</label>
+                            <textarea id="description" [(ngModel)]="currentEvent.description" rows="3"
+                                class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Privacy Settings -->
+                    <div *ngIf="currentStep === 2">
+                        <div class="mb-4 flex items-center">
+                            <input type="checkbox" id="hideEventName" [(ngModel)]="currentEvent.hideEventName"
+                                class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                            <label for="hideEventName" class="ml-2 block text-sm text-gray-900">Etkinlik adını
+                                gösterme.</label>
+                        </div>
+                        <div class="mb-4 flex items-center">
+                            <input type="checkbox" id="qrOnly" [(ngModel)]="currentEvent.qrOnly"
+                                class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                            <label for="qrOnly" class="ml-2 block text-sm text-gray-900">Etkinliğe sadece QR ile erişim
+                                sağlanabilsin.</label>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: Access -->
+                    <div *ngIf="currentStep === 3">
+                        <div
+                            class="flex items-center justify-center bg-white p-4 rounded-lg shadow-md w-48 h-48 mx-auto mb-4">
+                            <img [src]="getQRCodeUrl()" alt="QR Code" class="w-full h-full object-contain">
+                        </div>
+                        <p class="text-sm text-gray-600 text-center">Bu QR kodu katılımcılarınızla paylaşın.
+                            Etkinliğinize kolay erişim sağlar.</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="flex justify-between mt-6">
+                    <button *ngIf="currentStep > 0" (click)="prevStep()"
+                        class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l">
+                        Geri
+                    </button>
+                    <div class="flex-grow"></div>
+                    <button *ngIf="currentStep < 3" (click)="nextStep()" [disabled]="!canProceed()"
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-r"
+                        [ngClass]="{'opacity-50 cursor-not-allowed': !canProceed()}">
+                        İleri
+                    </button>
+                    <button *ngIf="currentStep === 3" (click)="saveEventSettings()" [disabled]="isSubmitting"
+                        class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-r">
+                        {{ isEditing ? 'Güncelle' : 'Oluştur' }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

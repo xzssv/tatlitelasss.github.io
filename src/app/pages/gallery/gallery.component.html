@@ -1,0 +1,33 @@
+<div class="gallery-container p-4">
+  <div class="mb-6 flex flex-wrap gap-2">
+    <button (click)="selectAllPhotos()" class="btn btn-primary">Tümünü Seç</button>
+    <button (click)="deselectAllPhotos()" class="btn btn-secondary">Seçimi Kaldır</button>
+    <button (click)="deleteSelectedPhotos()" class="btn btn-danger">Seçilenleri Sil</button>
+    <button (click)="downloadSelectedPhotos()" class="btn btn-success">Seçilenleri İndir</button>
+    <button (click)="deleteAllPhotos()" class="btn btn-danger">Tümünü Sil</button>
+  </div>
+
+  <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+    <div *ngFor="let photo of photos$ | async" class="gallery-item cursor-pointer" (click)="togglePhotoSelection(photo)"
+      [class.selected]="photo.selected">
+      <img [src]="photo.url" [alt]="photo.name" class="w-full h-full object-cover">
+      <div *ngIf="photo.selected" class="photo-overlay">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24"
+          stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="(photos$ | async)?.length === 0" class="text-center text-gray-500 mt-8">
+    Fotoğraf bulunamadı.
+  </div>
+</div>
+
+<button (click)="goBack()" class="fixed-back-btn">
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
+  </svg>
+  <span class="back-text">Geri Dön</span>
+</button>

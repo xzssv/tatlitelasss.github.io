@@ -1,0 +1,240 @@
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Great+Vibes&family=Roboto:wght@300;400&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-primary: #6B705C;
+    --color-secondary: #A5A58D;
+    --color-custom-green: #7dad7d;
+    --color-custom-brown: #CB997E;
+  }
+
+  body {
+    @apply font-sans min-h-screen bg-gradient-to-br from-[#FFF8E7] via-[#FBE7E9] to-[#FFE5D9] bg-[length:400%_400%] animate-gradient bg-fixed;
+  }
+}
+
+@layer utilities {
+  .font-dancing {
+    font-family: 'Dancing Script', cursive;
+  }
+  
+  .font-great-vibes {
+    font-family: 'Great Vibes', cursive;
+  }
+
+  .animate-gradient {
+    animation: gradient-rotation 5s ease infinite;
+  }
+}
+
+@layer components {
+  /* Login Component Styles */
+  .login-container {
+    @apply min-h-screen bg-gradient-to-br from-[#FFF8E7] via-[#FBE7E9] to-[#FFE5D9] bg-[length:400%_400%] animate-gradient bg-fixed;
+  } 
+}
+
+  /* Home Component Styles */
+  .home-title {
+    @apply text-5xl text-primary mb-2.5 font-dancing;
+  }
+
+  .home-date {
+    @apply text-4xl text-secondary mb-7.5 font-great-vibes;
+  }
+
+  .btnc {
+    @apply py-3 px-6 border-none rounded-full text-base cursor-pointer transition-all duration-300 flex items-center justify-center;
+    @apply animate-bounce w-36 text-white bg-custom-green;
+  }
+
+  .btnc:hover {
+    @apply bg-custom-green transform -translate-y-0.5 shadow-lg;
+  }
+
+  .btnc svg {
+    @apply w-6 h-6;
+  }
+
+  .btnc span {
+    @apply ml-2.5;
+  }
+
+  .fixed-gallery-btn,
+  .fixed-settings-btn {
+    @apply fixed right-5 w-[60px] h-[60px] rounded-full text-white border-none cursor-pointer flex items-center overflow-hidden transition-all duration-300 shadow-md z-50 p-0;
+  }
+
+  .fixed-gallery-btn {
+    @apply bottom-5 bg-custom-green;
+  }
+
+  .fixed-settings-btn {
+    @apply bottom-[90px] bg-custom-green;
+  }
+
+  .fixed-gallery-btn:hover,
+  .fixed-settings-btn:hover {
+    @apply w-[150px];
+  }
+
+  .fixed-gallery-btn svg,
+  .fixed-settings-btn svg {
+    @apply w-6 h-6 stroke-current flex-shrink-0 mx-[18px];
+  }
+
+  .gallery-text,
+  .settings-text {
+    @apply whitespace-nowrap opacity-0 transition-all duration-300 absolute left-[60px] right-0 text-center flex items-center justify-center h-full;
+  }
+
+  .fixed-gallery-btn:hover .gallery-text,
+  .fixed-settings-btn:hover .settings-text {
+    @apply opacity-100;
+  }
+
+  /* Gallery Component Styles */
+  .gallery-item {
+    @apply relative overflow-hidden rounded-lg shadow-md aspect-square;
+  }
+
+  .gallery-item img {
+    @apply w-full h-full object-cover transition-transform duration-300 ease-in-out;
+  }
+
+  .gallery-item:hover img {
+    @apply scale-105;
+  }
+
+  .photo-overlay {
+    @apply absolute inset-0 bg-blue-500 bg-opacity-50 flex items-center justify-center;
+  }
+
+  .gallery-item.selected {
+    @apply ring-4 ring-blue-500;
+  }
+
+  .fixed-back-btn {
+    @apply fixed bottom-4 right-4 p-3 text-white rounded-full shadow-lg 
+           flex items-center justify-center transition-all duration-300 ease-in-out
+           bg-custom-green w-[60px] h-[60px];
+  }
+
+  .fixed-back-btn:hover {
+    @apply bg-amber-400 w-[150px];
+  }
+
+  .fixed-back-btn svg {
+    @apply w-6 h-6;
+  }
+
+  .back-text {
+    @apply ml-2 hidden;
+  }
+
+  .fixed-back-btn:hover .back-text {
+    @apply inline;
+  }
+
+  .btn {
+    @apply px-4 py-2 rounded-md font-semibold text-white transition-colors duration-300;
+  }
+
+  .btn-primary {
+    @apply bg-blue-500 hover:bg-blue-600;
+  }
+
+  .btn-secondary {
+    @apply bg-gray-500 hover:bg-gray-600;
+  }
+
+  .btn-danger {
+    @apply bg-red-500 hover:bg-red-600;
+  }
+
+  .btn-success {
+    @apply bg-green-500 hover:bg-green-600;
+  }
+
+  /* Global Components */
+  .fixed-back-button {
+    @apply fixed bottom-4 right-4 p-3 border-none rounded-full cursor-pointer transition-all duration-300 flex items-center justify-center bg-custom-green text-white shadow-md;
+  }
+
+  .fixed-back-button:hover {
+    @apply opacity-80;
+  }
+
+  .photo-container {
+    @apply relative w-full pt-[100%] overflow-hidden rounded-full;
+  }
+
+  .photo-container img {
+    @apply absolute top-1/2 left-1/2 w-full h-full object-cover rounded-full transform -translate-x-1/2 -translate-y-1/2 transition-transform duration-300 ease-in-out;
+  }
+
+  .photo-container:hover img {
+    @apply scale-105;
+  }
+
+  /* SweetAlert2 Styles */
+  .swal2-popup {
+    @apply text-sm;
+  }
+  
+  .swal2-title {
+    @apply text-xl;
+  }
+  
+  .swal2-content {
+    @apply text-base;
+  }
+  
+  .swal2-styled.swal2-confirm {
+    @apply text-sm;
+  }
+
+  /* Choices.js Styles */
+  .choices__inner {
+    background-color: #fff;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    min-height: 44px;
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .choices__list--single {
+    padding: 4px 16px 4px 4px;
+  }
+  
+  .choices__list--dropdown {
+    background-color: #fff;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    margin-top: 2px;
+  }
+  
+  .choices__list--dropdown .choices__item--selectable {
+    padding: 8px 16px;
+  }
+  
+  .choices__list--dropdown .choices__item--selectable.is-highlighted {
+    background-color: #e5e7eb;
+  }
+  
+  .choices[data-type*='select-one']:after {
+    border-color: #6b7280 transparent transparent transparent;
+    right: 11.5px;
+    top: 50%;
+    margin-top: -2.5px;
+  }
+
+@keyframes gradient-rotation {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
